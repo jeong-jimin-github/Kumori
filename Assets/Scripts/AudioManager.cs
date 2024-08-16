@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using FMOD;
 using System.IO;
+using static UnityEngine.Rendering.PostProcessing.HistogramMonitor;
 
 public class AudioManager : MonoBehaviour
 {
@@ -11,14 +12,13 @@ public class AudioManager : MonoBehaviour
     FMOD.Channel sfxChannel;
     private Coroutine fadeOutCoroutine;
 
-    public void LoadAudio(string FileName)
+    public void LoadAudio(string FileName, string audioType)
     {
         sfxChannelGroup = new FMOD.ChannelGroup();
         sfxChannel = new FMOD.Channel();
         sfx = new FMOD.Sound();
 
-        string audioType = "mp3";
-        FMODUnity.RuntimeManager.CoreSystem.createSound(Path.Combine(Application.streamingAssetsPath, "Audio", FileName + "." + audioType), FMOD.MODE.CREATESAMPLE, out sfx);
+        FMODUnity.RuntimeManager.CoreSystem.createSound(Path.Combine(FileName + "." + audioType), FMOD.MODE.CREATESAMPLE, out sfx);
 
         sfxChannel.setChannelGroup(sfxChannelGroup);
 
@@ -33,6 +33,20 @@ public class AudioManager : MonoBehaviour
         sfxChannel.setPaused(false);
     }
 
+    public void Pause(bool isPause)
+    {
+        if (isPause == true)
+        {
+            sfxChannel.setPaused(true);
+        }
+
+        else
+        {
+            sfxChannel.setPaused(false);
+        }
+    }
+
+
     public void Stop(System.Action onFadeOutComplete)
     {
         if (fadeOutCoroutine != null)
@@ -40,6 +54,12 @@ public class AudioManager : MonoBehaviour
             StopCoroutine(fadeOutCoroutine);
         }
         fadeOutCoroutine = StartCoroutine(FadeOut(sfxChannel, 2f, onFadeOutComplete)); // Adjust the fade-out duration as needed
+    }
+
+    public void cstop()
+    {
+        sfxChannel.setVolume(0f);
+        sfxChannel.stop();
     }
 
     private IEnumerator FadeOut(FMOD.Channel channel, float duration, System.Action onFadeOutComplete)

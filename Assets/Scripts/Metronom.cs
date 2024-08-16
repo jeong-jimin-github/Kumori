@@ -18,7 +18,7 @@ public class Metronome : MonoBehaviour
     void Start()
     {
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
-        audioManager.LoadAudio("bip");
+        audioManager.LoadAudio(Application.streamingAssetsPath + "/Audio/" + "bip", "mp3");
         beatInterval = 60.0f / bpm;
         timer = beatInterval;
         totalOffset = 0.0f;

@@ -1,7 +1,7 @@
 ﻿using System;
-using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class Toucah : MonoBehaviour
 {
@@ -23,7 +23,14 @@ public class Toucah : MonoBehaviour
     public GameObject lineRenderersParent;
     public LineRenderer collidedLineRenderer;
 
-   private void Start()
+    public NoteGen noteGen; // NoteGen 스크립트를 참조합니다.
+    private float perfectThreshold = 0.1f;
+    private float greatThreshold = 0.2f;
+    private float goodThreshold = 0.3f;
+    public GameObject timer;
+    float time = 0;
+
+    private void Start()
     {
         PlayerPrefs.SetInt("Perfect", 0);
         PlayerPrefs.SetInt("Great", 0);
@@ -31,326 +38,147 @@ public class Toucah : MonoBehaviour
         PlayerPrefs.SetInt("Miss", 0);
         PlayerPrefs.SetInt("Score", 0);
     }
+
     void Update()
     {
-
-
-        for (int i = 0; i < Input.touchCount; i++)
+        print(time);
+        if (timer.GetComponent<timer>().start == true)
         {
-            Touch touch = Input.GetTouch(i);
+            time = time + Time.deltaTime;
+        }
 
-            if (touch.phase == TouchPhase.Began)
+        float currentTime = time;
+
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            if (Time.timeScale == 1)
             {
-                Ray ray = Camera.main.ScreenPointToRay(touch.position);
-                RaycastHit hit;
-
-                if (Physics.Raycast(ray, out hit))
-                {
-                    Debug.Log("Hit Object: " + hit.collider.gameObject.name);
-
-                    if (hit.collider.gameObject.tag == "Note" || hit.collider.gameObject.tag == "LongNote" || hit.collider.gameObject.tag == "TN")
-                    {
-                        if (hit.collider.gameObject.transform.localPosition.x == -1.5f)
-                        {
-                            if (Time.timeScale == 1)
-                            {
-                                one.Play();
-                                CheckNoteInLine(1);
-                                checkTNLine1();
-                            }
-                        }
-                        if (hit.collider.gameObject.transform.localPosition.x == -0.5f)
-                        {
-                            if (Time.timeScale == 1)
-                            {
-                                two.Play();
-                                checkTNLine2();
-                                CheckNoteInLine(2);
-                            }
-
-                        }
-                        if (hit.collider.gameObject.transform.localPosition.x == 0.5f)
-                        {
-                            if (Time.timeScale == 1)
-                            {
-                                three.Play();
-                                checkTNLine3();
-                                CheckNoteInLine(3);
-                            }
-
-                        }
-                        if (hit.collider.gameObject.transform.localPosition.x == 1.5f)
-                        {
-                            if (Time.timeScale == 1)
-                            {
-                                four.Play();
-                                checkTNLine4();
-                                CheckNoteInLine(4);
-                            }
-
-                        }
-                    }
-                    else
-                    {
-                        int lineIndex = int.Parse(hit.collider.gameObject.name);
-                        if (lineIndex == 1)
-                        {
-
-                            if (Time.timeScale == 1)
-                            {
-                                one.Play();
-                                CheckNoteInLine(1);
-                            }
-
-                        }
-                        if (lineIndex == 2)
-                        {
-
-                            if (Time.timeScale == 1)
-                            {
-                                two.Play();
-                                CheckNoteInLine(2);
-                            }
-
-                        }
-                        if (lineIndex == 3)
-                        {
-
-                            if (Time.timeScale == 1)
-                            {
-                                three.Play();
-                                CheckNoteInLine(3);
-                            }
-
-                        }
-                        if (lineIndex == 4)
-                        {
-
-                            if (Time.timeScale == 1)
-                            {
-                                four.Play();
-                                CheckNoteInLine(4);
-                            }
-
-                        }
-                    }
-                }
-                else
-                {
-                    Debug.Log("No object was hit.");
-                }
+                one.Play();
+                CheckNoteInLine(0, currentTime);
             }
-
-            Ray raya = Camera.main.ScreenPointToRay(touch.position);
-            RaycastHit hita;
-
-            if (Physics.Raycast(raya, out hita))
+        }
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            if (Time.timeScale == 1)
             {
-                Debug.Log("Hit Object: " + hita.collider.gameObject.name);
-
-                if (hita.collider.gameObject.tag == "Note" || hita.collider.gameObject.tag == "LongNote" || hita.collider.gameObject.tag == "TN")
-                {
-                    if (hita.collider.gameObject.transform.localPosition.x == -1.5f)
-                    {
-
-                        checkTNLine1();
-                    }
-                    if (hita.collider.gameObject.transform.localPosition.x == -0.5f)
-                    {
-
-                        checkTNLine2();
-                    }
-                    if (hita.collider.gameObject.transform.localPosition.x == 0.5f)
-                    {
-
-                        checkTNLine3();
-                    }
-                    if (hita.collider.gameObject.transform.localPosition.x == 1.5f)
-                    {
-
-                        checkTNLine4();
-                    }
-                }
-                else
-                {
-                    int lineIndex = int.Parse(hita.collider.gameObject.name);
-                    if (lineIndex == 1)
-                    {
-
-                        checkTNLine1();
-                    }
-                    if (lineIndex == 2)
-                    {
-
-                        checkTNLine2();
-                    }
-                    if (lineIndex == 3)
-                    {
-                        checkTNLine3();
-                    }
-                    if (lineIndex == 4)
-                    {
-                        checkTNLine4();
-                    }
-                }
+                two.Play();
+                CheckNoteInLine(1, currentTime);
             }
-            else
+        }
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            if (Time.timeScale == 1)
             {
-                Debug.Log("No object was hit.");
+                three.Play();
+                CheckNoteInLine(2, currentTime);
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            if (Time.timeScale == 1)
+            {
+                four.Play();
+                CheckNoteInLine(3, currentTime);
             }
         }
 
-        CheckMissedNotes();
+        if (Input.GetKey(KeyCode.D))
+        {
+            CheckHoldNoteInLine(0, currentTime);
+        }
+        if (Input.GetKey(KeyCode.F))
+        {
+            CheckHoldNoteInLine(1, currentTime);
+        }
+        if (Input.GetKey(KeyCode.J))
+        {
+            CheckHoldNoteInLine(2, currentTime);
+        }
+        if (Input.GetKey(KeyCode.K))
+        {
+            CheckHoldNoteInLine(4, currentTime);
+        }
+
+        CheckMissedNotes(currentTime);
     }
 
-    void checkTNLine1()
+    void CheckNoteInLine(int lineIndex, float currentTime)
     {
-        Vector3 bc = new Vector3(-1.5f, 0, 0f);
-        Vector3 boxtn = new Vector3(0.5f, 1f, 1f);
-
-        Collider[] tn = Physics.OverlapBox(bc, boxtn);
-
-        foreach (Collider collider in tn)
+        for (int i = 0; i < noteGen.NotesTime.Count; i++)
         {
-            if (collider.gameObject.tag == "TN")
+            if (noteGen.LaneNum[i] == lineIndex && noteGen.NoteType[i] == 1)
             {
-                NoteController noteController = collider.gameObject.GetComponent<NoteController>();
-
-                if (noteController != null && noteController.isActive)
+                float noteTime = noteGen.NotesTime[i];
+                float timeDifference = Mathf.Abs(noteTime - currentTime);
+                if (timeDifference <= perfectThreshold)
                 {
-                    noteController.DeactivateNote();
-                    Debug.Log("Object in the box: " + collider.gameObject.name);
                     perfect();
+                    RemoveNoteAt(i);
+                    return;
                 }
-            }
-        }
-    }
-    void checkTNLine2()
-    {
-        Vector3 bc = new Vector3(-0.5f, 0, 0f);
-        Vector3 boxtn = new Vector3(0.5f, 1f, 1f);
-
-        Collider[] tn = Physics.OverlapBox(bc, boxtn);
-
-        foreach (Collider collider in tn)
-        {
-            if (collider.gameObject.tag == "TN")
-            {
-                NoteController noteController = collider.gameObject.GetComponent<NoteController>();
-
-                if (noteController != null && noteController.isActive)
+                else if (timeDifference <= greatThreshold)
                 {
-                    noteController.DeactivateNote();
-                    Debug.Log("Object in the box: " + collider.gameObject.name);
-                    perfect();
+                    great();
+                    RemoveNoteAt(i);
+                    return;
                 }
-            }
-        }
-    }
-    void checkTNLine3()
-    {
-        Vector3 bc = new Vector3(0.5f, 0, 0f);
-        Vector3 boxtn = new Vector3(0.5f, 1f, 1f);
-
-        Collider[] tn = Physics.OverlapBox(bc, boxtn);
-
-        foreach (Collider collider in tn)
-        {
-            if (collider.gameObject.tag == "TN")
-            {
-                NoteController noteController = collider.gameObject.GetComponent<NoteController>();
-
-                if (noteController != null && noteController.isActive)
+                else if (timeDifference <= goodThreshold)
                 {
-                    noteController.DeactivateNote();
-                    Debug.Log("Object in the box: " + collider.gameObject.name);
-                    perfect();
+                    good();
+                    RemoveNoteAt(i);
+                    return;
                 }
-            }
-        }
-    }
-    void checkTNLine4()
-    {
-        Vector3 bc = new Vector3(1.5f, 0, 0f);
-        Vector3 boxtn = new Vector3(0.5f, 1f, 1f);
-
-        Collider[] tn = Physics.OverlapBox(bc, boxtn);
-
-        foreach (Collider collider in tn)
-        {
-            if (collider.gameObject.tag == "TN")
-            {
-                NoteController noteController = collider.gameObject.GetComponent<NoteController>();
-
-                if (noteController != null && noteController.isActive)
+                else if (timeDifference <= goodThreshold + 0.1)
                 {
-                    noteController.DeactivateNote();
-                    Debug.Log("Object in the box: " + collider.gameObject.name);
+                    miss();
+                    RemoveNoteAt(i);
+                    return;
+                }
+            }
+        }
+        comboCount = 0;
+    }
+
+    void CheckHoldNoteInLine(int lineIndex, float currentTime)
+    {
+        for (int i = 0; i < noteGen.NotesTime.Count; i++)
+        {
+            if (noteGen.LaneNum[i] == lineIndex && noteGen.NoteType[i] == 2)
+            {
+                float noteTime = noteGen.NotesTime[i];
+                float timeDifference = currentTime - noteTime;
+
+                if (timeDifference >= 0 && timeDifference <= goodThreshold)
+                {
                     perfect();
+                    RemoveNoteAt(i);
+                    return;
                 }
             }
         }
     }
-    void CheckNoteInLine(int lineIndex)
+
+    void RemoveNoteAt(int index)
     {
-        float lineX = (lineIndex - 2.5f) * 1.0f;
-        float lineY = 0f;
-
-        Vector3 boxCenter = new Vector3(lineX, lineY, 0f);
-        Vector3 boxSizePerfect = new Vector3(0.5f, 2f, 1f);
-        Vector3 boxSizeGreat = new Vector3(0.5f, 3f, 1f);
-        Vector3 boxSizeGood = new Vector3(0.5f, 4f, 1f);
-
-        Collider[] collidersInBoxPerfect = Physics.OverlapBox(boxCenter, boxSizePerfect);
-        Collider[] collidersInBoxGreat = Physics.OverlapBox(boxCenter, boxSizeGreat);
-        Collider[] collidersInBoxGood = Physics.OverlapBox(boxCenter, boxSizeGood);
-
-        if (CheckCollidersAndScore(collidersInBoxPerfect, 300))
-        {
-            comboCount++;
-        }
-        else if (CheckCollidersAndScore(collidersInBoxGreat, 200))
-        {
-            comboCount++;
-        }
-        else if (CheckCollidersAndScore(collidersInBoxGood, 100))
-        {
-            comboCount++;
-        }
-        else
-        {
-            comboCount = 0;
-        }
-
+        Destroy(noteGen.NotesObj[index]);
+        noteGen.NotesTime.RemoveAt(index);
+        noteGen.LaneNum.RemoveAt(index);
+        noteGen.NoteType.RemoveAt(index);
+        noteGen.NotesObj.RemoveAt(index);
+        comboCount++;
         UpdateMaxCombo();
     }
 
-    bool CheckCollidersAndScore(Collider[] colliders, int scoreValue)
+    void CheckMissedNotes(float currentTime)
     {
-        foreach (Collider collider in colliders)
+        for (int i = noteGen.NotesTime.Count - 1; i >= 0; i--)
         {
-            if (collider.gameObject.tag != "TN")
+            if (noteGen.NotesTime[i] < currentTime - goodThreshold)
             {
-                NoteController noteController = collider.gameObject.GetComponent<NoteController>();
-
-                if (noteController != null && noteController.isActive)
-                {
-                    noteController.DeactivateNote();
-                    Debug.Log("Object in the box: " + collider.gameObject.name);
-
-                    if (scoreValue == 300)
-                        perfect();
-                    else if (scoreValue == 200)
-                        great();
-                    else if (scoreValue == 100)
-                        good();
-
-                    return true;
-                }
+                miss();
+                RemoveNoteAt(i);
             }
         }
-
-        return false;
     }
 
     void UpdateMaxCombo()
@@ -358,26 +186,6 @@ public class Toucah : MonoBehaviour
         if (comboCount > maxCombo)
         {
             maxCombo = comboCount;
-        }
-    }
-
-    void CheckMissedNotes()
-    {
-        Vector3 boxCenter = new Vector3(0f, -5f, 0f);
-        Vector3 boxSize = new Vector3(3.0f, 1.0f, 1f);
-
-        Collider[] collidersInBoxMissed = Physics.OverlapBox(boxCenter, boxSize);
-
-        foreach (Collider collider in collidersInBoxMissed)
-        {
-            NoteController noteController = collider.gameObject.GetComponent<NoteController>();
-
-            if (noteController != null && noteController.isActive)
-            {
-                miss();
-                noteController.DeactivateNote();
-                comboCount = 0;
-            }
         }
     }
 
@@ -416,7 +224,7 @@ public class Toucah : MonoBehaviour
 
     void miss()
     {
-       missa.Play();
+        missa.Play();
         guiTextObject.text = "0";
         PlayerPrefs.SetInt("Miss", PlayerPrefs.GetInt("Miss") + 1);
     }

@@ -15,7 +15,7 @@ public class Main2Login : MonoBehaviour
     void Start()
     {
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
-        audioManager.LoadAudio("Main");
+        audioManager.LoadAudio(Application.streamingAssetsPath + "/Audio/" + "Main", "mp3");
         audioManager.PlayAudio();
     }
 

@@ -12,7 +12,7 @@ public class Video : MonoBehaviour
     void Start()
     {
 
-        offset = (float)30 / PlayerPrefs.GetInt("Speed");
+        offset = 3f;
         if (PlayerPrefs.GetInt("BGA") == 1)
         {
             StartCoroutine(TestVideoPlayer());

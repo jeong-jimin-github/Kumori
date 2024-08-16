@@ -11,7 +11,6 @@ public class timer : MonoBehaviour
         time += Time.deltaTime;
         if (time >= 2)
         {
-            print("start");
             start = true;
         }
     }

@@ -14,9 +14,11 @@ public class Pause : MonoBehaviour
     public GameObject auadio;
     public VideoPlayer video;
     bool IsPause;
+    AudioManager audioManager;
 
     void Start()
     {
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         pause.onClick.AddListener(pauseclicked);
         restartb.onClick.AddListener(restart);
         select.onClick.AddListener(kselect);
@@ -30,8 +32,8 @@ public class Pause : MonoBehaviour
         if (IsPause == false)
         {
             Time.timeScale = 0;
-        // auadio.GetComponent<MusicManager>().audioPlayer.Pause();
-           video.Pause();
+            audioManager.Pause(true);
+            video.Pause();
             PauseUI.SetActive(true);
             IsPause = true;
             return;
@@ -43,7 +45,7 @@ public class Pause : MonoBehaviour
         if (IsPause == true)
         {
             Time.timeScale = 1;
-          //auadio.GetComponent<MusicManager>().audioPlayer.UnPause();
+            audioManager.Pause(false);
             video.Play();
             PauseUI.SetActive(false);
             IsPause = false;
@@ -54,7 +56,7 @@ public class Pause : MonoBehaviour
     {
         if (IsPause == true)
         {
-        // auadio.GetComponent<MusicManager>().audioPlayer.Stop();
+            audioManager.cstop();
             video.Pause();
             Time.timeScale = 1;
             IsPause = false;
@@ -66,7 +68,7 @@ public class Pause : MonoBehaviour
     {
         if (IsPause == true)
         {
-       //  auadio.GetComponent<MusicManager>().audioPlayer.Stop();
+            audioManager.cstop();
             video.Pause();
             Time.timeScale = 1;
             IsPause = false;

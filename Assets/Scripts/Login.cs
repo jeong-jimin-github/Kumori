@@ -19,7 +19,7 @@ public class Login : MonoBehaviour
     void Start()
     {
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
-        audioManager.LoadAudio("Login");
+        audioManager.LoadAudio(Application.streamingAssetsPath + "/Audio/" + "Login", "mp3");
         audioManager.PlayAudio();
         LoginButton.onClick.AddListener(LoginFunc);
         join.onClick.AddListener(joinfunc);

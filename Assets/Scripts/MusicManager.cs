@@ -7,16 +7,24 @@ public class MusicManager : MonoBehaviour
     public GameObject timer;
     AudioManager audioManager;
     float offset;
+    string SongName;
+
     void Start()
     {
+        SongName = PlayerPrefs.GetString("Song");
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
-        audioManager.LoadAudio("bip");
-        offset = (float)30 / PlayerPrefs.GetInt("Speed");
+        audioManager.LoadAudio(Application.persistentDataPath + "/" + SongName, "wav");
+        offset = 3;
         print(offset);
 
     }
 
 
+    IEnumerator Play()
+    {
+        yield return new WaitForSeconds(offset);
+        audioManager.PlayAudio();
+    }
 
 
     private void Update()
@@ -26,7 +34,7 @@ public class MusicManager : MonoBehaviour
         {
             if (i == 0)
             {
-                //audioPlayer.PlayDelayed(offset);
+                StartCoroutine(Play());
                 i++;
             }
         }
