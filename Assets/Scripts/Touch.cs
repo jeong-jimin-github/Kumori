@@ -185,6 +185,7 @@ public class Toucah : MonoBehaviour
         noteGen.LaneNum.RemoveAt(index);
         noteGen.NoteType.RemoveAt(index);
         noteGen.NotesObj.RemoveAt(index);
+        noteGen.noteNum--;
     }
 
     void CheckMissedNotes(float currentTime)

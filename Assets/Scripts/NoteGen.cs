@@ -56,6 +56,54 @@ public class NoteGen : MonoBehaviour
         }
     }
 
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            AdjustNotePositions("-");
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            AdjustNotePositions("+");
+        }
+    }
+
+private void AdjustNotePositions(string mp)
+{
+    // 10 이하, 20 이상으로 속도 조절을 못하게 함
+    if (NotesSpeed > 10 && mp == "+")
+    {
+        return;
+    }
+    else if (NotesSpeed < 20 && mp == "-")
+    {
+        return;
+    }
+    else
+    {
+        if (mp == "+")
+        {
+            NotesSpeed += 1f;
+        }
+        else if (mp == "-")
+        {
+            NotesSpeed -= 1f;
+        }
+
+        PlayerPrefs.SetInt("Speed", (int)NotesSpeed);
+
+        for (int i = 0; i < NotesObj.Count; i++)
+        {
+            NoteMove noteMove = NotesObj[i].GetComponent<NoteMove>();
+            if (noteMove != null)
+            {
+                noteMove.AdjustPosition(NotesSpeed);
+            }
+        }
+    }
+}
+
+
     private void Load(string SongName)
     {
         string inputString = System.IO.File.ReadAllText(Application.persistentDataPath + "/" + SongName + ".json");
@@ -108,7 +156,7 @@ public class NoteGen : MonoBehaviour
                     LaneNum.Add(inputJson.notes[i].notes[a].block);
                     NoteType.Add(3);
 
-                    GameObject rNoteChild = Instantiate(RNotePrefab, new Vector3(inputJson.notes[i].notes[a].block - 1.5f, zz, 0), Quaternion.identity);
+                    GameObject rNoteChild = Instantiate(RNotePrefab, new Vector3(inputJson.notes[a].block - 1.5f, zz, 0), Quaternion.identity);
                     NotesObj.Add(rNoteChild);
 
                     positions.Add(rNoteChild.transform.position);
