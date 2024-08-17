@@ -14,7 +14,6 @@ public class Metronome : MonoBehaviour
 
     public Text offsetText;
 
-
     void Start()
     {
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
@@ -23,7 +22,6 @@ public class Metronome : MonoBehaviour
         timer = beatInterval;
         totalOffset = 0.0f;
         touchCount = 0;
-
     }
 
     void Update()
@@ -39,12 +37,7 @@ public class Metronome : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            float offset = timer;
-            if (offset < 0)
-            {
-                offset += beatInterval; // 음수 offset을 beatInterval로 보정
-            }
-
+            float offset = beatInterval - Mathf.Abs(timer);
             totalOffset += offset;
             touchCount++;
 

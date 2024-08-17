@@ -62,7 +62,7 @@ public class NoteGen : MonoBehaviour
         Data inputJson = JsonUtility.FromJson<Data>(inputString);
 
         BPM = inputJson.BPM;
-        offset = (float)inputJson.offset / 100000f;
+        offset = (float)inputJson.offset / 44100f;
         print("Offset: " + offset);
         noteNum = inputJson.notes.Length;
         for (int i = 0; i < inputJson.notes.Length; i++)

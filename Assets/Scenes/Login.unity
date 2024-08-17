@@ -371,6 +371,7 @@ MonoBehaviour:
   LoginButton: {fileID: 1328628570}
   ID: {fileID: 897683657}
   PW: {fileID: 230668414}
+  dataIO: {fileID: 683509897}
   ERRORUI: {fileID: 1429440343}
   ERRORTEXT: {fileID: 49557557}
 --- !u!4 &119346154
@@ -1034,6 +1035,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 577879570}
   m_CullTransparentMesh: 1
+--- !u!1 &683509896
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 683509898}
+  - component: {fileID: 683509897}
+  m_Layer: 0
+  m_Name: DataIO
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &683509897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 683509896}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3093f4f00d062a74f90af2010ebe0ced, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &683509898
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 683509896}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 960, y: 540, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &897683655
 GameObject:
   m_ObjectHideFlags: 0
@@ -2357,3 +2402,4 @@ SceneRoots:
   - {fileID: 119346154}
   - {fileID: 513881083}
   - {fileID: 1429440347}
+  - {fileID: 683509898}

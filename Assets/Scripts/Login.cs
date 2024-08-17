@@ -12,7 +12,7 @@ public class Login : MonoBehaviour
 
     public InputField ID;
     public InputField PW;
-
+    public DataIO dataIO;
     public GameObject ERRORUI;
     public Text ERRORTEXT;
     // Start is called before the first frame update
@@ -46,7 +46,6 @@ public class Login : MonoBehaviour
     {
         string userid = ID.text;
         string userpassword = PW.text;
-        //if (userid == "" || userpassword == "")
         if (userid == "" || userpassword == "")
         {
             ERROR("ACCOUNT");
@@ -82,6 +81,7 @@ public class Login : MonoBehaviour
                 }
                 else{
                     PlayerPrefs.SetString("ID", responseText);
+                    dataIO.SendGetRequest(responseText);
                     audioManager.Stop(OnFadeOutComplete);
                 }
             }

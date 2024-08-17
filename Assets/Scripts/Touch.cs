@@ -25,8 +25,8 @@ public class Toucah : MonoBehaviour
 
     public NoteGen noteGen; // NoteGen 스크립트를 참조합니다.
     private float perfectThreshold = 0.05f;
-    private float greatThreshold = 0.15f;
-    private float goodThreshold = 0.25f;
+    private float greatThreshold = 0.1f;
+    private float goodThreshold = 0.15f;
     public GameObject timer;
     float time = 0;
     double percent;
@@ -109,7 +109,7 @@ public class Toucah : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.K))
         {
-            CheckHoldNoteInLine(4, currentTime);
+            CheckHoldNoteInLine(3, currentTime);
         }
 
         CheckMissedNotes(currentTime);

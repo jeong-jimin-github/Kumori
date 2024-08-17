@@ -17,7 +17,8 @@ public class MusicManager : MonoBehaviour
         SongName = PlayerPrefs.GetString("Song");
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         audioManager.LoadAudio(Application.persistentDataPath + "/" + SongName, "wav");
-        songlength = audioManager.getLoadedSoundLength();
+        songlength = audioManager.getLoadedSoundLength() / 1000;
+        print(songlength);
         offset = 3;
         print(offset);
 
@@ -45,9 +46,9 @@ public class MusicManager : MonoBehaviour
                 i++;
             }
 
-            if (time >= (songlength/1000)) { 
+            if (time >= songlength) { 
             
-                audioManager.Stop(gotoResult);
+                gotoResult();
 
             }
         }
