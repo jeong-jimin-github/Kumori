@@ -6,7 +6,6 @@ using UnityEngine.UI;
 using UnityEngine.Video;
 public class Pause : MonoBehaviour
 {
-    public Button pause;
     public Button restartb;
     public Button select;
     public Button quit;
@@ -19,12 +18,26 @@ public class Pause : MonoBehaviour
     void Start()
     {
         audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
-        pause.onClick.AddListener(pauseclicked);
         restartb.onClick.AddListener(restart);
         select.onClick.AddListener(kselect);
         quit.onClick.AddListener(quitpause);
         PauseUI.SetActive(false);
         IsPause = false;
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (IsPause == false)
+            {
+                pauseclicked();
+            }
+            else
+            {
+                quitpause();
+            }
+        }
     }
 
     void pauseclicked()

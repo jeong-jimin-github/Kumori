@@ -7,6 +7,7 @@ public class Toucah : MonoBehaviour
 {
     public Text guiTextObject;
     public Text score;
+    public Text scoreText;
     public Animation aa;
     public Animation one;
     public Animation two;
@@ -17,18 +18,18 @@ public class Toucah : MonoBehaviour
     public Animation greata;
     public Animation gooda;
     public Animation missa;
-    private int comboCount = 0;
-    private int maxCombo = 0;
+    int maxCombo = 0;
     public GameObject sccb;
     public GameObject lineRenderersParent;
     public LineRenderer collidedLineRenderer;
 
     public NoteGen noteGen; // NoteGen 스크립트를 참조합니다.
-    private float perfectThreshold = 0.1f;
-    private float greatThreshold = 0.2f;
-    private float goodThreshold = 0.3f;
+    private float perfectThreshold = 0.05f;
+    private float greatThreshold = 0.15f;
+    private float goodThreshold = 0.25f;
     public GameObject timer;
     float time = 0;
+    double percent;
 
     private void Start()
     {
@@ -41,7 +42,19 @@ public class Toucah : MonoBehaviour
 
     void Update()
     {
-        print(time);
+        if (maxCombo != 0)
+        {
+            percent = int.Parse(score.text) / (maxCombo * 300.0) * 100.0;
+        }
+        else
+        {
+            percent = 100.00;
+        }
+
+        string formattedPercent = percent.ToString("F2");
+
+        scoreText.text = formattedPercent;
+
         if (timer.GetComponent<timer>().start == true)
         {
             time = time + Time.deltaTime;
@@ -106,51 +119,55 @@ public class Toucah : MonoBehaviour
     {
         for (int i = 0; i < noteGen.NotesTime.Count; i++)
         {
-            if (noteGen.LaneNum[i] == lineIndex && noteGen.NoteType[i] == 1)
+            if (noteGen.LaneNum[i] == lineIndex && noteGen.NoteType[i] != 3)
             {
                 float noteTime = noteGen.NotesTime[i];
                 float timeDifference = Mathf.Abs(noteTime - currentTime);
                 if (timeDifference <= perfectThreshold)
                 {
                     perfect();
+                    UpdateMaxCombo();
                     RemoveNoteAt(i);
                     return;
                 }
                 else if (timeDifference <= greatThreshold)
                 {
                     great();
+                    UpdateMaxCombo();
                     RemoveNoteAt(i);
                     return;
                 }
                 else if (timeDifference <= goodThreshold)
                 {
                     good();
+                    UpdateMaxCombo();
                     RemoveNoteAt(i);
                     return;
                 }
-                else if (timeDifference <= goodThreshold + 0.1)
+                else if (timeDifference <= goodThreshold + 0.05)
                 {
                     miss();
+                    UpdateMaxCombo();
                     RemoveNoteAt(i);
                     return;
                 }
             }
         }
-        comboCount = 0;
     }
 
     void CheckHoldNoteInLine(int lineIndex, float currentTime)
     {
         for (int i = 0; i < noteGen.NotesTime.Count; i++)
         {
-            if (noteGen.LaneNum[i] == lineIndex && noteGen.NoteType[i] == 2)
+            if (noteGen.LaneNum[i] == lineIndex && noteGen.NoteType[i] == 3)
             {
                 float noteTime = noteGen.NotesTime[i];
-                float timeDifference = currentTime - noteTime;
+                float timeDifference = Mathf.Abs(noteTime - currentTime);
 
                 if (timeDifference >= 0 && timeDifference <= goodThreshold)
                 {
                     perfect();
+                    UpdateMaxCombo();
                     RemoveNoteAt(i);
                     return;
                 }
@@ -160,13 +177,14 @@ public class Toucah : MonoBehaviour
 
     void RemoveNoteAt(int index)
     {
-        Destroy(noteGen.NotesObj[index]);
+        if (noteGen.NoteType[index] != 2 && noteGen.NoteType[index] != 3)
+        {
+            Destroy(noteGen.NotesObj[index]);
+        }
         noteGen.NotesTime.RemoveAt(index);
         noteGen.LaneNum.RemoveAt(index);
         noteGen.NoteType.RemoveAt(index);
         noteGen.NotesObj.RemoveAt(index);
-        comboCount++;
-        UpdateMaxCombo();
     }
 
     void CheckMissedNotes(float currentTime)
@@ -176,6 +194,7 @@ public class Toucah : MonoBehaviour
             if (noteGen.NotesTime[i] < currentTime - goodThreshold)
             {
                 miss();
+                UpdateMaxCombo();
                 RemoveNoteAt(i);
             }
         }
@@ -183,15 +202,11 @@ public class Toucah : MonoBehaviour
 
     void UpdateMaxCombo()
     {
-        if (comboCount > maxCombo)
-        {
-            maxCombo = comboCount;
-        }
+        maxCombo++;
     }
 
     void perfect()
     {
-        print("perfect");
         perfecta.Play();
         guiTextObject.text = (int.Parse(guiTextObject.text) + 1).ToString();
         aa.Play();
@@ -202,7 +217,6 @@ public class Toucah : MonoBehaviour
 
     void great()
     {
-        print("great");
         greata.Play();
         aa.Play();
         guiTextObject.text = (int.Parse(guiTextObject.text) + 1).ToString();
@@ -213,7 +227,6 @@ public class Toucah : MonoBehaviour
 
     void good()
     {
-        print("good");
         gooda.Play();
         aa.Play();
         guiTextObject.text = (int.Parse(guiTextObject.text) + 1).ToString();

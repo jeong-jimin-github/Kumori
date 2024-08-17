@@ -54,7 +54,6 @@ public class NoteGen : MonoBehaviour
         {
             Load("アスノヨゾラ哨戒班");
         }
-
     }
 
     private void Load(string SongName)
@@ -64,7 +63,7 @@ public class NoteGen : MonoBehaviour
 
         BPM = inputJson.BPM;
         offset = (float)inputJson.offset / 100000f;
-        print("Offest: " + offset);
+        print("Offset: " + offset);
         noteNum = inputJson.notes.Length;
         for (int i = 0; i < inputJson.notes.Length; i++)
         {
@@ -78,7 +77,7 @@ public class NoteGen : MonoBehaviour
                 LaneNum.Add(inputJson.notes[i].block);
                 NoteType.Add(inputJson.notes[i].type);
 
-                float z = NotesTime[i] * NotesSpeed;
+                float z = NotesTime[NotesTime.Count - 1] * NotesSpeed;
                 NotesObj.Add(Instantiate(noteObj, new Vector3(inputJson.notes[i].block - 1.5f, z, 0), Quaternion.identity));
             }
             else if (inputJson.notes[i].type == 2)
@@ -87,7 +86,7 @@ public class NoteGen : MonoBehaviour
                 LaneNum.Add(inputJson.notes[i].block);
                 NoteType.Add(inputJson.notes[i].type);
 
-                float z = NotesTime[i] * NotesSpeed;
+                float z = NotesTime[NotesTime.Count - 1] * NotesSpeed;
                 GameObject rNote = Instantiate(noteObj, new Vector3(inputJson.notes[i].block - 1.5f, z, 0), Quaternion.identity);
                 NotesObj.Add(rNote);
 
@@ -104,6 +103,11 @@ public class NoteGen : MonoBehaviour
                 {
                     float timea = (beatSec * inputJson.notes[i].notes[a].num / (float)inputJson.notes[i].notes[a].LPB) + offset + PlayerPrefs.GetFloat("Offset") + garim;
                     float zz = timea * NotesSpeed;
+
+                    NotesTime.Add(timea);
+                    LaneNum.Add(inputJson.notes[i].notes[a].block);
+                    NoteType.Add(3);
+
                     GameObject rNoteChild = Instantiate(RNotePrefab, new Vector3(inputJson.notes[i].notes[a].block - 1.5f, zz, 0), Quaternion.identity);
                     NotesObj.Add(rNoteChild);
 
@@ -113,6 +117,5 @@ public class NoteGen : MonoBehaviour
                 lineRenderer.SetPositions(positions.ToArray());
             }
         }
-
     }
 }

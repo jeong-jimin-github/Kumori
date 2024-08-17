@@ -16,18 +16,20 @@ public class SelectManager : MonoBehaviour
     public Text title;
     public Text auther;
     public Text bpm;
-    public AudioSource audioPlayer;
-    AudioClip clip;
+    AudioManager audioManager;
     
     void Start()
     {
-    	AsunoYozoraShoukaihan.onClick.AddListener(asu);
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
+        AsunoYozoraShoukaihan.onClick.AddListener(asu);
         HatsuneMikunoShoushitsu.onClick.AddListener(shousitu);
         Unwelcome_School.onClick.AddListener(unwelcome);
         if(PlayerPrefs.GetString("Song") == "アスノヨゾラ哨戒班") asu();
         else if (PlayerPrefs.GetString("Song") == "初音ミクの消失") shousitu();
         else if (PlayerPrefs.GetString("Song") == "Unwelcome School") unwelcome();
         else asu();
+        audioManager.LoadAudio(Application.streamingAssetsPath + "/Audio/" + "Kyoku", "wav");
+        audioManager.PlayAudio();
     }
     void asu()
     {
@@ -66,27 +68,12 @@ PlayerPrefs.Save();
 
     void AudioPlay()
     {
-        StartCoroutine("TestUnityWebRequest");
+        audioManager.Stop(play);
     }
 
-    IEnumerator TestUnityWebRequest()
+    void play()
     {
-        string path = "file://" + Application.persistentDataPath + "/" + PlayerPrefs.GetString("Song") + ".wav";
-
-        using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(path, UnityEngine.AudioType.WAV))
-        {
-            yield return www.SendWebRequest();
-
-            if (www.result == UnityWebRequest.Result.Success)
-            {
-                clip = DownloadHandlerAudioClip.GetContent(www);
-                audioPlayer.clip = clip;
-                audioPlayer.Play();
-            }
-            else
-            {
-                Debug.LogError("UnityWebRequest failed: " + www.error);
-            }
-        }
+        audioManager.LoadAudio(Application.persistentDataPath + "/" + PlayerPrefs.GetString("Song"), "wav");
+        audioManager.PlayAudio();
     }
 }

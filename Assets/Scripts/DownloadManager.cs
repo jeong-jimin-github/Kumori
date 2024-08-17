@@ -55,7 +55,7 @@ public class DownloadManager : MonoBehaviour
                 yield return StartCoroutine(DownloadFile(item.category, item.filename, filePath));
             }
 
-            statusText.text = $"Downloaded {i + 1}/{items.Length} files";
+            statusText.text = $"다운로드 중... {i + 1}/{items.Length} 완료";
             yield return null;
         }
 

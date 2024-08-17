@@ -25,6 +25,12 @@ public class AudioManager : MonoBehaviour
         sfxChannel.stop();
     }
 
+    public uint getLoadedSoundLength()
+    {
+        sfx.getLength(out uint pos, FMOD.TIMEUNIT.MS);
+        return pos;
+    }
+
     public void PlayAudio()
     {
         FMODUnity.RuntimeManager.CoreSystem.playSound(sfx, sfxChannelGroup, false, out sfxChannel);
@@ -53,7 +59,7 @@ public class AudioManager : MonoBehaviour
         {
             StopCoroutine(fadeOutCoroutine);
         }
-        fadeOutCoroutine = StartCoroutine(FadeOut(sfxChannel, 2f, onFadeOutComplete)); // Adjust the fade-out duration as needed
+        fadeOutCoroutine = StartCoroutine(FadeOut(sfxChannel, 1f, onFadeOutComplete)); // Adjust the fade-out duration as needed
     }
 
     public void cstop()

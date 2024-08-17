@@ -6,14 +6,20 @@ using UnityEngine.UI;
 
 public class offset : MonoBehaviour
 {
+    AudioManager audioManager;
     public Button aB;
     void Start()
     {
+        audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         aB.onClick.AddListener(setting);
     }
-
     void setting()
     {
-        SceneManager.LoadScene("Setting");
+        audioManager.Stop(gotooffset);
     }
+
+    void gotooffset()
+    {
+        SceneManager.LoadSceneAsync("Setting");
+     }
 }
